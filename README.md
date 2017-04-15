@@ -1,0 +1,1 @@
+This is the android client for https://github.com/coding-blocks/shortlr
