@@ -3,6 +3,7 @@
     package="com.codingblocks.shortlr">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
 
     <application
         android:allowBackup="true"
@@ -15,8 +16,6 @@
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
-
-
             </intent-filter>
         </activity>
 
@@ -31,20 +30,22 @@
         </receiver>
 
         <activity
-
             android:name=".ShortenActivity"
             android:label="Shorten">
             <intent-filter>
                 <action android:name="android.intent.action.PROCESS_TEXT" />
+
                 <category android:name="android.intent.category.DEFAULT" />
+
                 <data android:mimeType="text/plain" />
             </intent-filter>
-
         </activity>
+
         <service
             android:name=".CBWatcherService"
             android:enabled="true"
             android:exported="true" />
+
     </application>
 
 </manifest>
