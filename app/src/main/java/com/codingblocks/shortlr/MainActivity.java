@@ -24,7 +24,7 @@ public class MainActivity extends AppCompatActivity {
 
     public static final String TAG = "MainAct";
     EditText etUrl, etSecret, etCustom;
-    Button btnShorten, btnCopy, btnPaste;
+    Button btnShorten, btnCopy, btnPaste,btnShare;
     TextView tvResult;
     ClipboardManager myClipboard;
 

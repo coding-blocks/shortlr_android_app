@@ -1,12 +1,5 @@
 package com.codingblocks.shortlr;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.Calendar;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -23,7 +16,12 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.Toast;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 
 public class CBWatcherService extends Service {
@@ -61,17 +59,16 @@ public class CBWatcherService extends Service {
                 Pattern p = Pattern.compile(URL_REGEX);
                 Matcher m = p.matcher(clipboardText);
                 if (m.find()) {
-                    showView();
-
-                } else {
-
+                    if (!Utils.getHost(clipboardText).equals("cb.lk")) {
+                        showView(clipboardText);
+                    }
                 }
 
             }
         }
     }
 
-    public void showView() {
+    public void showView(final String url) {
         final WindowManager manager = (WindowManager) getApplicationContext().getSystemService(Context.WINDOW_SERVICE);
         WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams();
         layoutParams.gravity = Gravity.CENTER;
@@ -83,14 +80,36 @@ public class CBWatcherService extends Service {
         layoutParams.buttonBrightness = 1f;
         layoutParams.windowAnimations = android.R.style.Animation_Dialog;
 
-        final View view = View.inflate(getApplicationContext(), R.layout.test_layout, null);
+        final View view = View.inflate(getApplicationContext(), R.layout.window_layout, null);
         Button yesButton = (Button) view.findViewById(R.id.yesButton);
         Button noButton = (Button) view.findViewById(R.id.noButton);
         yesButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
-                manager.removeView(view);
+                String urlToShort = url;
+                PostBody postBody = new PostBody(urlToShort, null, null);
+
+                String urlToPost = "http://cb.lk/api/v1/";
+                Retrofit retrofit = new Retrofit.Builder().addConverterFactory(GsonConverterFactory.create()).baseUrl(urlToPost).build();
+                ShortenApi shortenApi = retrofit.create(ShortenApi.class);
+
+                shortenApi.getResult(postBody).enqueue(new Callback<Result>() {
+
+                    @Override
+                    public void onResponse(Call<Result> call, Response<Result> response) {
+                        String shortUrl = "cb.lk/" + response.body().shortcode;
+                        Utils.saveToClipboard(shortUrl, CBWatcherService.this);
+                        manager.removeView(view);
+                    }
+
+                    @Override
+                    public void onFailure(Call<Result> call, Throwable t) {
+                        t.printStackTrace();
+                    }
+                });
+
+
             }
         });
         noButton.setOnClickListener(new View.OnClickListener() {

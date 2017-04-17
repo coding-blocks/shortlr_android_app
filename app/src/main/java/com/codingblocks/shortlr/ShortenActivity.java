@@ -77,6 +77,6 @@ public class ShortenActivity extends Activity {
             });
         }
 
-
     }
+
 }
