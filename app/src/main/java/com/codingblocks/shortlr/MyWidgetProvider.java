@@ -114,8 +114,6 @@ public class MyWidgetProvider extends AppWidgetProvider {
             @Override
             public void onResponse(Call<Result> call, Response<Result> response) {
 
-
-
                 shortURL[0] = "cb.lk/" + response.body().shortcode;
 
                 Log.d(TAG, "onResponse: " + response.body().longURL);

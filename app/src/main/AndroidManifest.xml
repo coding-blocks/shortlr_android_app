@@ -41,6 +41,10 @@
             </intent-filter>
 
         </activity>
+        <service
+            android:name=".CBWatcherService"
+            android:enabled="true"
+            android:exported="true" />
     </application>
 
 </manifest>
