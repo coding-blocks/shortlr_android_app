@@ -1,4 +1,4 @@
-package com.codingblocks.shortlr;
+package com.codingblocks.shortlr.services;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -16,6 +16,12 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
+
+import com.codingblocks.shortlr.models.PostBody;
+import com.codingblocks.shortlr.R;
+import com.codingblocks.shortlr.models.Result;
+import com.codingblocks.shortlr.api.ShortenApi;
+import com.codingblocks.shortlr.Utils;
 
 import retrofit2.Call;
 import retrofit2.Callback;

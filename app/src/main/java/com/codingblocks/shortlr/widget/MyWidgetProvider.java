@@ -1,29 +1,26 @@
-package com.codingblocks.shortlr;
+package com.codingblocks.shortlr.widget;
 
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
-import android.content.ClipData;
-import android.content.ClipboardManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.util.Log;
-import android.widget.Button;
 import android.widget.RemoteViews;
-import android.widget.TextView;
-import android.widget.Toast;
 
-import java.util.Random;
+import com.codingblocks.shortlr.models.PostBody;
+import com.codingblocks.shortlr.R;
+import com.codingblocks.shortlr.models.Result;
+import com.codingblocks.shortlr.api.ShortenApi;
+import com.codingblocks.shortlr.Utils;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
-
-import static android.content.Context.CLIPBOARD_SERVICE;
 
 /**
  * Created by piyush0 on 11/04/17.
@@ -114,9 +111,9 @@ public class MyWidgetProvider extends AppWidgetProvider {
             @Override
             public void onResponse(Call<Result> call, Response<Result> response) {
 
-                shortURL[0] = "cb.lk/" + response.body().shortcode;
+                shortURL[0] = "cb.lk/" + response.body().getShortcode();
 
-                Log.d(TAG, "onResponse: " + response.body().longURL);
+                Log.d(TAG, "onResponse: " + response.body().getLongURL());
                 Log.d(TAG, "onResponse: " + shortURL[0]);
 
 

@@ -1,4 +1,7 @@
-package com.codingblocks.shortlr;
+package com.codingblocks.shortlr.api;
+
+import com.codingblocks.shortlr.models.PostBody;
+import com.codingblocks.shortlr.models.Result;
 
 import retrofit2.Call;
 import retrofit2.http.Body;

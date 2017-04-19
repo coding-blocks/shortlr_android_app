@@ -1,12 +1,16 @@
-package com.codingblocks.shortlr;
+package com.codingblocks.shortlr.activities;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.net.Uri;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
+
+import com.codingblocks.shortlr.models.PostBody;
+import com.codingblocks.shortlr.R;
+import com.codingblocks.shortlr.models.Result;
+import com.codingblocks.shortlr.api.ShortenApi;
+import com.codingblocks.shortlr.Utils;
 
 import retrofit2.Call;
 import retrofit2.Callback;

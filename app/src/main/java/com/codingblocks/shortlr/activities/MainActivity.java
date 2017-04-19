@@ -1,10 +1,8 @@
-package com.codingblocks.shortlr;
+package com.codingblocks.shortlr.activities;
 
 import android.content.ClipData;
 import android.content.ClipboardManager;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -13,6 +11,12 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.codingblocks.shortlr.services.CBWatcherService;
+import com.codingblocks.shortlr.models.PostBody;
+import com.codingblocks.shortlr.R;
+import com.codingblocks.shortlr.models.Result;
+import com.codingblocks.shortlr.api.ShortenApi;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -60,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
 
                     @Override
                     public void onResponse(Call<Result> call, Response<Result> response) {
-                        tvResult.setText("cb.lk/" + response.body().shortcode);
+                        tvResult.setText("cb.lk/" + response.body().getShortcode());
 
                     }
 

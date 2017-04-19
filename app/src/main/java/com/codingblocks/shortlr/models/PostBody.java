@@ -1,4 +1,4 @@
-package com.codingblocks.shortlr;
+package com.codingblocks.shortlr.models;
 
 /**
  * Created by piyush0 on 11/04/17.
