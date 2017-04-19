@@ -49,7 +49,7 @@ public class CBWatcherService extends Service {
                     startActivity(i);
                 }
             } else {
-                //Check for build version < M
+                performClipboardCheck();
             }
         }
     };

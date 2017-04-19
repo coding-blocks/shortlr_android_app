@@ -42,7 +42,7 @@ public class DummyActivity extends Activity {
                 // Hogya
             }
         } else {
-            //Check in emulator TODO
+            //Handled in CBWatcherService
         }
     }
 }
