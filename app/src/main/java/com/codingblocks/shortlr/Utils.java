@@ -6,6 +6,8 @@ import android.content.Context;
 import android.util.Log;
 import android.widget.Toast;
 
+import java.io.IOException;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -45,12 +47,12 @@ public class Utils {
         return text;
     }
 
-    public static String getHost(String url){
-        if(url == null || url.length() == 0)
+    public static String getHost(String url) {
+        if (url == null || url.length() == 0)
             return "";
 
         int doubleslash = url.indexOf("//");
-        if(doubleslash == -1)
+        if (doubleslash == -1)
             doubleslash = 0;
         else
             doubleslash += 2;
@@ -64,4 +66,6 @@ public class Utils {
         return url.substring(doubleslash, end);
     }
 
+
 }
+

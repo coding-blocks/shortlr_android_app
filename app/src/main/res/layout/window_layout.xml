@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
+    z
     <Button
         android:text="Shorten"
         android:id="@+id/yesButton"
@@ -12,6 +13,11 @@
         android:id="@+id/noButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/shareButton"
+        android:text="Share"/>
 
 
 </LinearLayout>

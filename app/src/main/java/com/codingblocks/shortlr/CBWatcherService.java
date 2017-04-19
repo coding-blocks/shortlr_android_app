@@ -10,13 +10,18 @@ import android.content.ClipboardManager;
 import android.content.ClipboardManager.OnPrimaryClipChangedListener;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.net.Uri;
+import android.os.Build;
 import android.os.IBinder;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 
+import pl.tajchert.nammu.Nammu;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -29,7 +34,12 @@ public class CBWatcherService extends Service {
     public static final String URL_REGEX = "^((https?|ftp)://|(www|ftp)\\.)?[a-z0-9-]+(\\.[a-z0-9-]+)+([/?].*)?$";
     private OnPrimaryClipChangedListener listener = new OnPrimaryClipChangedListener() {
         public void onPrimaryClipChanged() {
-            performClipboardCheck();
+            Intent i=new Intent(CBWatcherService.this,DummyActivity.class);
+            startActivity(i);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                if(Settings.canDrawOverlays(CBWatcherService.this)){
+                performClipboardCheck();}
+            }
         }
     };
 
@@ -81,6 +91,7 @@ public class CBWatcherService extends Service {
         layoutParams.windowAnimations = android.R.style.Animation_Dialog;
 
         final View view = View.inflate(getApplicationContext(), R.layout.window_layout, null);
+        view.setBackgroundColor(Color.parseColor("#ffffff"));
         Button yesButton = (Button) view.findViewById(R.id.yesButton);
         Button noButton = (Button) view.findViewById(R.id.noButton);
         yesButton.setOnClickListener(new View.OnClickListener() {
