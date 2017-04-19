@@ -59,6 +59,8 @@
                 <data android:mimeType="text/plain" />
             </intent-filter>
         </activity>
+        <activity android:name=".activities.DummyActivity"
+            android:theme="@style/Theme.Transparent"></activity>
     </application>
 
 </manifest>
