@@ -39,12 +39,16 @@ public class CBWatcherService extends Service {
     public static final String URL_REGEX = "^((https?|ftp)://|(www|ftp)\\.)?[a-z0-9-]+(\\.[a-z0-9-]+)+([/?].*)?$";
     private OnPrimaryClipChangedListener listener = new OnPrimaryClipChangedListener() {
         public void onPrimaryClipChanged() {
-            Intent i=new Intent(CBWatcherService.this,DummyActivity.class);
-            startActivity(i);
+
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                if(Settings.canDrawOverlays(CBWatcherService.this)){
-                    performClipboardCheck();}
-            }else{
+                if (Settings.canDrawOverlays(CBWatcherService.this)) {
+                    performClipboardCheck();
+                } else {
+                    Intent i = new Intent(CBWatcherService.this, DummyActivity.class);
+                    i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(i);
+                }
+            } else {
                 //Check for build version < M
             }
         }

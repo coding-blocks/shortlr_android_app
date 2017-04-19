@@ -51,7 +51,7 @@ public class ShortenAndShareActivity extends Activity {
                         @Override
                         public void onResponse(Call<Result> call, Response<Result> response) {
 
-                            String shortenedURL = "cb.lk/" + response.body().shortcode;
+                            String shortenedURL = "cb.lk/" + response.body().getShortcode();
                             Intent i = new Intent(Intent.ACTION_SEND);
                             i.setType("text/plain");
                             i.putExtra(Intent.EXTRA_SUBJECT, "Sharing URL");

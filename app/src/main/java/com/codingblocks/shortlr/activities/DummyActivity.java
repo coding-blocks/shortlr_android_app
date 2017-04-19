@@ -13,13 +13,14 @@ import com.codingblocks.shortlr.R;
 
 public class DummyActivity extends Activity {
     SharedPreferences sharedPreferences;
+    public static final String SHARED_PREFS = "SP";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dummy);
 
-        sharedPreferences = getSharedPreferences("MeaningString", MODE_PRIVATE);
+        sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
 
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
