@@ -59,7 +59,7 @@
                 <data android:mimeType="text/plain" />
             </intent-filter>
         </activity>
-        <activity android:name=".activities.DummyActivity"
+        <activity android:name=".activities.GetPermissionActivity"
             android:theme="@style/Theme.Transparent"></activity>
     </application>
 

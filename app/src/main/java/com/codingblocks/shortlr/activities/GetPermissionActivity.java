@@ -6,25 +6,26 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.Settings;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 import com.codingblocks.shortlr.R;
 
-public class DummyActivity extends Activity {
+
+
+public class GetPermissionActivity extends Activity {
     SharedPreferences sharedPreferences;
     public static final String SHARED_PREFS = "SP";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_dummy);
+        setContentView(R.layout.activity_get_permission);
 
         sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
 
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (!Settings.canDrawOverlays(DummyActivity.this)) {
+            if (!Settings.canDrawOverlays(GetPermissionActivity.this)) {
                 int num = sharedPreferences.getInt("Permission", 0);
 
                 if (num == 0) {

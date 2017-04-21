@@ -20,7 +20,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 
-import com.codingblocks.shortlr.activities.DummyActivity;
+import com.codingblocks.shortlr.activities.GetPermissionActivity;
 import com.codingblocks.shortlr.models.PostBody;
 import com.codingblocks.shortlr.R;
 import com.codingblocks.shortlr.models.Result;
@@ -44,7 +44,7 @@ public class CBWatcherService extends Service {
                 if (Settings.canDrawOverlays(CBWatcherService.this)) {
                     performClipboardCheck();
                 } else {
-                    Intent i = new Intent(CBWatcherService.this, DummyActivity.class);
+                    Intent i = new Intent(CBWatcherService.this, GetPermissionActivity.class);
                     i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     startActivity(i);
                 }
