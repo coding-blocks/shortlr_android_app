@@ -20,3 +20,6 @@ This is the android client for Coding Blocks Shortlr ([Github](https://github.co
 
 ![](https://github.com/coding-blocks/shortlr_android_app/blob/master/Shorten%20window.gif)
 
+## For Contributors
+
+Any UI changes are welcome. Please add a screenshot with the PR if there are UI changes.
