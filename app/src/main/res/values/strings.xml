@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">Shortlr</string>
+    <string name="api_endpoint">http://cb.lk/api/v1/</string>
+    <string name="short_code_prepend">http://cb.lk/</string>
+    <string name="not_a_url">Not a URL!</string>
+</resources>
