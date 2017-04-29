@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.util.Log;
 import android.widget.RemoteViews;
+import android.widget.Toast;
 
 import com.codingblocks.shortlr.models.PostBody;
 import com.codingblocks.shortlr.R;
@@ -51,8 +52,6 @@ public class MyWidgetProvider extends AppWidgetProvider {
             remoteViews.setOnClickPendingIntent(R.id.widget_btn_shorten, getPendingSelfIntent(context, ShortenClick));
             remoteViews.setOnClickPendingIntent(R.id.widget_btn_paste, getPendingSelfIntent(context, PasteClick));
 
-
-
             appWidgetManager.updateAppWidget(widgetId, remoteViews);
 
         }
@@ -71,10 +70,15 @@ public class MyWidgetProvider extends AppWidgetProvider {
         String url = sharedPreferences.getString("url", "");
         setTextOnTv(context, url);
         if (ShortenClick.equals(intent.getAction())) {
-            // your onClick action is here
-
-            Log.d(TAG, "onReceive: " + sharedPreferences.getString("url", "default"));
-            getShortenedUrl(url, context);
+            if (!Utils.isUrl(url)) {
+                Toast.makeText(context, "Not a url", Toast.LENGTH_SHORT).show();
+            } else {
+                if (Utils.getHost(url).equals("cb.lk")) {
+                    Toast.makeText(context, "Already a short url", Toast.LENGTH_SHORT).show();
+                } else {
+                    getShortenedUrl(url, context);
+                }
+            }
 
         } else if (PasteClick.equals(intent.getAction())) {
 
@@ -88,7 +92,7 @@ public class MyWidgetProvider extends AppWidgetProvider {
         SharedPreferences sharedpreferences = context.getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedpreferences.edit();
         editor.putString("url", str);
-        editor.commit();
+        editor.apply();
     }
 
     private void setTextOnTv(Context context, String text) {

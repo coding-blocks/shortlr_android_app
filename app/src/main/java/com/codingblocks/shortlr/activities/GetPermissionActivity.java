@@ -10,11 +10,10 @@ import android.os.Bundle;
 
 import com.codingblocks.shortlr.R;
 
-
-
 public class GetPermissionActivity extends Activity {
     SharedPreferences sharedPreferences;
-    public static final String SHARED_PREFS = "SP";
+    private static final String SHARED_PREFS = "sp_permission_count";
+    private static final String PERMISSION = "Permission";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,27 +22,18 @@ public class GetPermissionActivity extends Activity {
 
         sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
 
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (!Settings.canDrawOverlays(GetPermissionActivity.this)) {
-                int num = sharedPreferences.getInt("Permission", 0);
-
+                int num = sharedPreferences.getInt(PERMISSION, 0);
                 if (num == 0) {
                     SharedPreferences.Editor editor = sharedPreferences.edit();
-                    editor.putInt("Permission", num + 1);
-                    editor.commit();
+                    editor.putInt(PERMISSION, num + 1);
+                    editor.apply();
                     Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + getPackageName()));
                     startActivityForResult(intent, 0);
                     finish();
-                } else {
-
                 }
-
-            } else {
-                // Hogya
             }
-        } else {
-            //Handled in CBWatcherService
         }
     }
 }

@@ -6,6 +6,9 @@ import android.content.Context;
 import android.util.Log;
 import android.widget.Toast;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -45,12 +48,12 @@ public class Utils {
         return text;
     }
 
-    public static String getHost(String url){
-        if(url == null || url.length() == 0)
+    public static String getHost(String url) {
+        if (url == null || url.length() == 0)
             return "";
 
         int doubleslash = url.indexOf("//");
-        if(doubleslash == -1)
+        if (doubleslash == -1)
             doubleslash = 0;
         else
             doubleslash += 2;
@@ -62,6 +65,14 @@ public class Utils {
         end = (port > 0 && port < end) ? port : end;
 
         return url.substring(doubleslash, end);
+    }
+
+    private static final String URL_REGEX = "^((https?|ftp)://|(www|ftp)\\.)?[a-z0-9-]+(\\.[a-z0-9-]+)+([/?].*)?$";
+
+    public static boolean isUrl(String str) {
+        Pattern p = Pattern.compile(URL_REGEX);
+        Matcher m = p.matcher(str);//replace with string to compare
+        return m.find();
     }
 
 }

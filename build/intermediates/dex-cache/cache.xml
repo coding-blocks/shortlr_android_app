@@ -38,6 +38,15 @@
         <dex dex="/Users/piyush0/Documents/CodingBlocks/Shortlr-android/app/build/intermediates/pre-dexed/debug/classes_f5390d496d82d77b1c8692b5537ee453e4ce0c5b.jar" />
     </item>
     <item
+        is-multidex="true"
+        jar="/Users/piyush0/Documents/CodingBlocks/Shortlr-android/app/build/intermediates/incremental-runtime-classes/debug/instant-run.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="510aa6efc159983dfbffa676a0dae37568c0a46f">
+        <dex dex="/Users/piyush0/Documents/CodingBlocks/Shortlr-android/app/build/intermediates/transforms/dex/debug/folders/1000/10000/instant-run_89a4b8f645522bf14b2acde4cfdc4ba13445dfc5/classes.dex" />
+    </item>
+    <item
         is-multidex="false"
         jar="/Users/piyush0/.android/build-cache/d279be91b9549c2c6de1b8b0d19183dff116688e/output/jars/classes.jar"
         jumboMode="false"
@@ -99,6 +108,15 @@
         revision="25.0.2"
         sha1="425c7b17887e5c3f8cbdf67ba171bc246f29b42c">
         <dex dex="/Users/piyush0/Documents/CodingBlocks/Shortlr-android/app/build/intermediates/pre-dexed/debug/classes_82c72f3d81e12e96bf729049dd7ff7af431dc425.jar" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/piyush0/Documents/CodingBlocks/Shortlr-android/app/build/intermediates/incremental-classes/debug/instant-run-bootstrap.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="1ed4a12442e4369dbef1f66fec0df93adfddfc4d">
+        <dex dex="/Users/piyush0/Documents/CodingBlocks/Shortlr-android/app/build/intermediates/transforms/dex/debug/folders/1000/10000/instant-run-bootstrap_7bb6a39da639aa4664d08b7d09c1e3f747576459/classes.dex" />
     </item>
 
 </items>

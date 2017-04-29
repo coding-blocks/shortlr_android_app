@@ -39,6 +39,7 @@ public class ShortenAndShareActivity extends Activity {
                 Log.d(TAG, "onCreate: " + hostName);
                 if (hostName.equals("cb.lk")) {
                     Toast.makeText(this, "Please use another app to share the link!", Toast.LENGTH_SHORT).show();
+                    finish();
                 } else {
                     PostBody postBody = new PostBody(urlToShort, "", "");
 
@@ -57,6 +58,7 @@ public class ShortenAndShareActivity extends Activity {
                             i.putExtra(Intent.EXTRA_SUBJECT, "Sharing URL");
                             i.putExtra(Intent.EXTRA_TEXT, shortenedURL);
                             startActivity(Intent.createChooser(i, "Share URL"));
+                            finish();
                         }
 
                         @Override
