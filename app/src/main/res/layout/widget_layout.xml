@@ -2,34 +2,40 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/layout"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/appwidget_dark_bg"
-    android:layout_margin="5sp"
+    android:background="@drawable/pattern"
+    android:padding="16dp"
     android:orientation="horizontal">
 
-    <Button
+    <ImageButton
         android:id="@+id/widget_btn_paste"
-        android:layout_width="50dp"
-        android:layout_height="match_parent"
-        android:background="@drawable/ic_content_paste_white_24dp" />
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_gravity="center"
+        android:src="@drawable/clipboard_paste_button"
+        android:background="@drawable/widget_paste_button" />
 
 
     <TextView
         android:id="@+id/widget_tv_url"
-        android:layout_width="119dp"
-        android:layout_height="match_parent"
+        android:layout_width="0dp"
+        android:layout_weight="3"
+        android:layout_height="wrap_content"
         android:gravity="center"
         android:layout_gravity="center"
-        android:maxLines="1"
         android:textColor="#fcfcfc"
         android:textStyle="bold" />
 
-    <Button
+    <ImageButton
         android:id="@+id/widget_btn_shorten"
-        android:layout_width="50dp"
-        android:layout_height="match_parent"
-        android:background="@drawable/ic_vertical_align_center_white_24dp" />
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_gravity="center"
+        android:src="@drawable/scissors"
+        android:background="@drawable/widget_shorten_button" />
 
 
 </LinearLayout>
