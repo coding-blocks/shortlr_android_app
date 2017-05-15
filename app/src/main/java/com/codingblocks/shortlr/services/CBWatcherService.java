@@ -66,7 +66,6 @@ public class CBWatcherService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Log.d(TAG, "onStartCommand: ");
         return START_STICKY;
     }
 
@@ -112,16 +111,14 @@ public class CBWatcherService extends Service {
         scale.setInterpolator(new AccelerateInterpolator());
         view.startAnimation(scale);
         view.setBackgroundColor(Color.parseColor("#ffffff"));
-/*        Button yesButton = (Button) view.findViewById(R.id.yesButton);
-        Button noButton = (Button) view.findViewById(R.id.noButton);*/
-        ImageView yesButton=(ImageView) view.findViewById(R.id.yesButton);
-        ImageView noButton=(ImageView) view.findViewById(R.id.noButton);
+
+        ImageView yesButton = (ImageView) view.findViewById(R.id.yesButton);
+        ImageView noButton = (ImageView) view.findViewById(R.id.noButton);
         yesButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
-                String urlToShort = url;
-                PostBody postBody = new PostBody(urlToShort, null, null);
+                PostBody postBody = new PostBody(url, null, null);
 
                 String urlToPost = "http://cb.lk/api/v1/";
                 Retrofit retrofit = new Retrofit.Builder().addConverterFactory(GsonConverterFactory.create()).baseUrl(urlToPost).build();

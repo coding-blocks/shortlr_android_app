@@ -34,20 +34,14 @@ public class ShortenAndShareActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_shorten_and_share);
 
-
         Intent intent = getIntent();
         String action = intent.getAction();
         String type = intent.getType();
 
-
-
-
         if (Intent.ACTION_SEND.equals(action) && type != null) {
             if ("text/plain".equals(type)) {
-
                 String urlToShort = intent.getStringExtra(Intent.EXTRA_TEXT);
                 String hostName = Utils.getHost(urlToShort);
-                Log.d(TAG, "onCreate: " + hostName);
                 if (hostName.equals("cb.lk")) {
                     Toast.makeText(this, "Please use another app to share the link!", Toast.LENGTH_SHORT).show();
                     finish();
@@ -87,9 +81,7 @@ public class ShortenAndShareActivity extends Activity {
                             Intent chooserIntent = Intent.createChooser(targetIntents.remove(0), "Share URL");
                             chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, targetIntents.toArray(new Parcelable[] {}));
                             startActivity(chooserIntent);
-
                             finish();
-
                         }
 
                         @Override
