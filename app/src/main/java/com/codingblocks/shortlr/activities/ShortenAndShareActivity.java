@@ -35,7 +35,7 @@ public class ShortenAndShareActivity extends Activity {
         setContentView(R.layout.activity_shorten_and_share);
 
 
-        final Intent intent = getIntent();
+        Intent intent = getIntent();
         String action = intent.getAction();
         String type = intent.getType();
 
@@ -67,7 +67,7 @@ public class ShortenAndShareActivity extends Activity {
 
                             PackageManager pm = getPackageManager();
                             List<Intent> targetIntents = new ArrayList<Intent>();
-                            
+
                             Intent i = new Intent(Intent.ACTION_SEND);
                             i.setType("text/plain");
                             List<ResolveInfo> activities = pm.queryIntentActivities(i, 0);
