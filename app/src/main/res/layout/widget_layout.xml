@@ -1,41 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/layout"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@drawable/pattern"
-    android:padding="16dp"
-    android:orientation="horizontal">
+    android:id="@+id/widget_container"
+    android:layout_height="wrap_content">
 
-    <ImageButton
-        android:id="@+id/widget_btn_paste"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/layout"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:layout_gravity="center"
-        android:src="@drawable/clipboard_paste_button"
-        android:background="@drawable/widget_paste_button" />
+        android:orientation="horizontal"
+        android:padding="16dp">
+
+        <ImageButton
+            android:id="@+id/widget_btn_paste"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@drawable/widget_paste_button"
+            android:gravity="center"
+            android:src="@drawable/clipboard_paste_button" />
 
 
-    <TextView
-        android:id="@+id/widget_tv_url"
-        android:layout_width="0dp"
-        android:layout_weight="3"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:layout_gravity="center"
-        android:textColor="#fcfcfc"
-        android:textStyle="bold" />
+        <TextView
+            android:id="@+id/widget_tv_url"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="3"
+            android:gravity="center"
+            android:textColor="@android:color/white"
+            android:textStyle="bold" />
 
-    <ImageButton
-        android:id="@+id/widget_btn_shorten"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:layout_gravity="center"
-        android:src="@drawable/scissors"
-        android:background="@drawable/widget_shorten_button" />
+        <ImageButton
+            android:id="@+id/widget_btn_shorten"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@drawable/widget_shorten_button"
+            android:gravity="center"
+            android:src="@drawable/ic_unfold_less" />
 
 
-</LinearLayout>
+    </LinearLayout>
+</FrameLayout>

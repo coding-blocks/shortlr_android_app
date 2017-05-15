@@ -19,6 +19,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.ImageView;
 
 import com.codingblocks.shortlr.activities.GetPermissionActivity;
 import com.codingblocks.shortlr.models.PostBody;
@@ -103,8 +104,10 @@ public class CBWatcherService extends Service {
 
         final View view = View.inflate(getApplicationContext(), R.layout.window_layout, null);
         view.setBackgroundColor(Color.parseColor("#ffffff"));
-        Button yesButton = (Button) view.findViewById(R.id.yesButton);
-        Button noButton = (Button) view.findViewById(R.id.noButton);
+/*        Button yesButton = (Button) view.findViewById(R.id.yesButton);
+        Button noButton = (Button) view.findViewById(R.id.noButton);*/
+        ImageView yesButton=(ImageView) view.findViewById(R.id.yesButton);
+        ImageView noButton=(ImageView) view.findViewById(R.id.noButton);
         yesButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
