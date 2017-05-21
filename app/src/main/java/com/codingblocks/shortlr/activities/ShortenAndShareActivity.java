@@ -27,7 +27,6 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ShortenAndShareActivity extends Activity {
-    public static final String TAG = "SnSAct";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,8 +47,12 @@ public class ShortenAndShareActivity extends Activity {
                 } else {
                     PostBody postBody = new PostBody(urlToShort, "", "");
 
-                    String urlToPost = "http://cb.lk/api/v1/";
-                    Retrofit retrofit = new Retrofit.Builder().addConverterFactory(GsonConverterFactory.create()).baseUrl(urlToPost).build();
+                    String urlToPost = getString(R.string.api_endpoint);
+                    Retrofit retrofit = new Retrofit
+                            .Builder()
+                            .addConverterFactory(GsonConverterFactory.create())
+                            .baseUrl(urlToPost)
+                            .build();
                     ShortenApi shortenApi = retrofit.create(ShortenApi.class);
 
                     shortenApi.getResult(postBody).enqueue(new Callback<Result>() {
@@ -57,7 +60,7 @@ public class ShortenAndShareActivity extends Activity {
                         @Override
                         public void onResponse(Call<Result> call, Response<Result> response) {
 
-                            String shortenedURL = "cb.lk/" + response.body().getShortcode();
+                            String shortenedURL = getString(R.string.short_code_prepend) + response.body().getShortcode();
 
                             PackageManager pm = getPackageManager();
                             List<Intent> targetIntents = new ArrayList<Intent>();
@@ -88,14 +91,9 @@ public class ShortenAndShareActivity extends Activity {
                         public void onFailure(Call<Result> call, Throwable t) {
                             t.printStackTrace();
                         }
-
-
                     });
                 }
-
             }
-
-
         }
     }
 }

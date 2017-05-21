@@ -29,7 +29,6 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MyWidgetProvider extends AppWidgetProvider {
 
-    public static final String TAG = "MyWidgetProvider";
     private static final String ShortenClick = "myOnClickTag1";
     private static final String PasteClick = "myOnClickTag2";
     public static final String MyPREFERENCES = "Prefs";
@@ -38,8 +37,6 @@ public class MyWidgetProvider extends AppWidgetProvider {
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager,
                          int[] appWidgetIds) {
-
-        Log.d(TAG, "onUpdate: ");
 
         // Get all ids
         ComponentName thisWidget = new ComponentName(context,
@@ -73,7 +70,7 @@ public class MyWidgetProvider extends AppWidgetProvider {
             if (!Utils.isUrl(url)) {
                 Toast.makeText(context, "Not a url", Toast.LENGTH_SHORT).show();
             } else {
-                if (Utils.getHost(url).equals("cb.lk")) {
+                if (Utils.getHost(url).equals(context.getString(R.string.host))) {
                     Toast.makeText(context, "Already a short url", Toast.LENGTH_SHORT).show();
                 } else {
                     getShortenedUrl(url, context);
@@ -106,7 +103,7 @@ public class MyWidgetProvider extends AppWidgetProvider {
     public void getShortenedUrl(String url, final Context context) {
         PostBody postBody = new PostBody(url, "", "");
         final String[] shortURL = {""};
-        String urlToPost = "http://cb.lk/api/v1/";
+        String urlToPost = context.getString(R.string.api_endpoint);
         Retrofit retrofit = new Retrofit.Builder().addConverterFactory(GsonConverterFactory.create()).baseUrl(urlToPost).build();
         ShortenApi shortenApi = retrofit.create(ShortenApi.class);
 
@@ -114,17 +111,10 @@ public class MyWidgetProvider extends AppWidgetProvider {
 
             @Override
             public void onResponse(Call<Result> call, Response<Result> response) {
-
-                shortURL[0] = "cb.lk/" + response.body().getShortcode();
-
-                Log.d(TAG, "onResponse: " + response.body().getLongURL());
-                Log.d(TAG, "onResponse: " + shortURL[0]);
-
-
+                shortURL[0] = context.getString(R.string.short_code_prepend) + response.body().getShortcode();
                 saveToSharedPrefs(shortURL[0], context);
                 setTextOnTv(context, shortURL[0]);
                 Utils.saveToClipboard(shortURL[0], context);
-
             }
 
             @Override

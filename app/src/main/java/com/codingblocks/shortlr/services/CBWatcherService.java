@@ -1,8 +1,5 @@
 package com.codingblocks.shortlr.services;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import android.app.Service;
 import android.content.ClipData;
 import android.content.ClipDescription;
@@ -14,23 +11,22 @@ import android.graphics.Color;
 import android.os.Build;
 import android.os.IBinder;
 import android.provider.Settings;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.AccelerateInterpolator;
-import android.view.animation.AnticipateInterpolator;
-import android.view.animation.OvershootInterpolator;
 import android.view.animation.ScaleAnimation;
-import android.widget.Button;
 import android.widget.ImageView;
 
-import com.codingblocks.shortlr.activities.GetPermissionActivity;
-import com.codingblocks.shortlr.models.PostBody;
 import com.codingblocks.shortlr.R;
-import com.codingblocks.shortlr.models.Result;
-import com.codingblocks.shortlr.api.ShortenApi;
 import com.codingblocks.shortlr.Utils;
+import com.codingblocks.shortlr.activities.GetPermissionActivity;
+import com.codingblocks.shortlr.api.ShortenApi;
+import com.codingblocks.shortlr.models.PostBody;
+import com.codingblocks.shortlr.models.Result;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -40,7 +36,6 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 
 public class CBWatcherService extends Service {
-    private final String TAG = "MyWatcherService";
     public static final String URL_REGEX = "^((https?|ftp)://|(www|ftp)\\.)?[a-z0-9-]+(\\.[a-z0-9-]+)+([/?].*)?$";
     private OnPrimaryClipChangedListener listener = new OnPrimaryClipChangedListener() {
         public void onPrimaryClipChanged() {
@@ -88,7 +83,6 @@ public class CBWatcherService extends Service {
                         showView(clipboardText);
                     }
                 }
-
             }
         }
     }
@@ -120,7 +114,7 @@ public class CBWatcherService extends Service {
             public void onClick(View v) {
                 PostBody postBody = new PostBody(url, null, null);
 
-                String urlToPost = "http://cb.lk/api/v1/";
+                String urlToPost = getString(R.string.api_endpoint);
                 Retrofit retrofit = new Retrofit.Builder().addConverterFactory(GsonConverterFactory.create()).baseUrl(urlToPost).build();
                 ShortenApi shortenApi = retrofit.create(ShortenApi.class);
 
@@ -128,7 +122,7 @@ public class CBWatcherService extends Service {
 
                     @Override
                     public void onResponse(Call<Result> call, Response<Result> response) {
-                        String shortUrl = "cb.lk/" + response.body().getShortcode();
+                        String shortUrl = getString(R.string.short_code_prepend) + response.body().getShortcode();
                         Utils.saveToClipboard(shortUrl, CBWatcherService.this);
                         manager.removeView(view);
                     }
@@ -138,8 +132,6 @@ public class CBWatcherService extends Service {
                         t.printStackTrace();
                     }
                 });
-
-
             }
         });
         noButton.setOnClickListener(new View.OnClickListener() {

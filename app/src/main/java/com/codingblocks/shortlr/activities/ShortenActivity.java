@@ -3,14 +3,13 @@ package com.codingblocks.shortlr.activities;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.Toast;
 
-import com.codingblocks.shortlr.models.PostBody;
 import com.codingblocks.shortlr.R;
-import com.codingblocks.shortlr.models.Result;
-import com.codingblocks.shortlr.api.ShortenApi;
 import com.codingblocks.shortlr.Utils;
+import com.codingblocks.shortlr.api.ShortenApi;
+import com.codingblocks.shortlr.models.PostBody;
+import com.codingblocks.shortlr.models.Result;
 import com.codingblocks.shortlr.services.CBWatcherService;
 
 import retrofit2.Call;
@@ -20,7 +19,6 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ShortenActivity extends Activity {
-    public static final String TAG = "ShortenAct";
     public static final String ACTION_MAIN = "android.intent.action.MAIN";
 
     @Override
