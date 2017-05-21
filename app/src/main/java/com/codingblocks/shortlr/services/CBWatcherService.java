@@ -14,6 +14,7 @@ import android.provider.Settings;
 import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.ScaleAnimation;
 import android.widget.ImageView;
@@ -102,7 +103,7 @@ public class CBWatcherService extends Service {
         final View view = View.inflate(getApplicationContext(), R.layout.window_layout, null);
         ScaleAnimation scale = new ScaleAnimation(0, 1, 0, 1, ScaleAnimation.RELATIVE_TO_SELF, .5f, ScaleAnimation.RELATIVE_TO_SELF, .5f);
         scale.setDuration(300);
-        scale.setInterpolator(new AccelerateInterpolator());
+        scale.setInterpolator(new AccelerateDecelerateInterpolator());
         view.startAnimation(scale);
         view.setBackgroundColor(Color.parseColor("#ffffff"));
 
