@@ -4,6 +4,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import android.app.Service;
+import android.content.BroadcastReceiver;
 import android.content.ClipData;
 import android.content.ClipDescription;
 import android.content.ClipboardManager;
@@ -32,6 +33,7 @@ import com.codingblocks.shortlr.R;
 import com.codingblocks.shortlr.models.Result;
 import com.codingblocks.shortlr.api.ShortenApi;
 import com.codingblocks.shortlr.Utils;
+import com.codingblocks.shortlr.watcher.HomePressWatcher;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -59,6 +61,8 @@ public class CBWatcherService extends Service {
             }
         }
     };
+    private WindowManager manager=null;
+    private View view=null;
 
     @Override
     public void onCreate() {
@@ -96,7 +100,7 @@ public class CBWatcherService extends Service {
     }
 
     public void showView(final String url) {
-        final WindowManager manager = (WindowManager) getApplicationContext().getSystemService(Context.WINDOW_SERVICE);
+        manager = (WindowManager) getApplicationContext().getSystemService(Context.WINDOW_SERVICE);
         WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams();
         layoutParams.gravity = Gravity.CENTER;
         layoutParams.type = WindowManager.LayoutParams.TYPE_SYSTEM_ALERT;
@@ -107,12 +111,22 @@ public class CBWatcherService extends Service {
         layoutParams.buttonBrightness = 1f;
         layoutParams.windowAnimations = android.R.style.Animation_Dialog;
 
-        final View view = View.inflate(getApplicationContext(), R.layout.window_layout, null);
+        view = View.inflate(getApplicationContext(), R.layout.window_layout, null);
         ScaleAnimation scale = new ScaleAnimation(0, 1, 0, 1, ScaleAnimation.RELATIVE_TO_SELF, .5f, ScaleAnimation.RELATIVE_TO_SELF, .5f);
         scale.setDuration(300);
         scale.setInterpolator(new AccelerateDecelerateInterpolator());
         view.startAnimation(scale);
         view.setBackgroundColor(Color.parseColor("#ffffff"));
+        final HomePressWatcher homePressWatcher=new HomePressWatcher(view.getContext());
+        homePressWatcher.setIntereceptor(new HomePressWatcher.onHomePressed() {
+            @Override
+            public void onHomeButtonPressed() {
+                homePressWatcher.stopWatch();
+                manager.removeView(view);
+            }
+        });
+        homePressWatcher.startWatch();
+
 /*        Button yesButton = (Button) view.findViewById(R.id.yesButton);
         Button noButton = (Button) view.findViewById(R.id.noButton);*/
         ImageView yesButton=(ImageView) view.findViewById(R.id.yesButton);
@@ -155,5 +169,7 @@ public class CBWatcherService extends Service {
         });
         manager.addView(view, layoutParams);
     }
+
+
 }
 
