@@ -5,9 +5,9 @@ package com.codingblocks.shortlr.models;
  */
 
 public class PostBody {
-    String url;
-    String secret;
-    String code;
+    private String url;
+    private String secret;
+    private String code;
 
     public PostBody(String url, String secret, String code) {
         this.url = url;

@@ -5,4 +5,5 @@
     <string name="not_a_url">Not a URL!</string>
     <string name="shorten">Shorten</string>
     <string name="back">Back</string>
+    <string name="host">cb.lk</string>
 </resources>

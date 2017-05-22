@@ -1,21 +1,13 @@
 package com.codingblocks.shortlr.widget;
 
 import android.app.PendingIntent;
-import android.app.WallpaperManager;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Color;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
-import android.support.v7.graphics.Palette;
 import android.util.Log;
-import android.widget.LinearLayout;
 import android.widget.RemoteViews;
 import android.widget.Toast;
 
@@ -37,9 +29,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MyWidgetProvider extends AppWidgetProvider {
 
-    public static final String TAG = "MyWidgetProvider";
-    private static final String SHORTENCLICK = "myOnClickTag1";
-    private static final String PASTECLICK = "myOnClickTag2";
+    private static final String ShortenClick = "myOnClickTag1";
+    private static final String PasteClick = "myOnClickTag2";
     public static final String MyPREFERENCES = "Prefs";
 
 
@@ -47,33 +38,16 @@ public class MyWidgetProvider extends AppWidgetProvider {
     public void onUpdate(Context context, AppWidgetManager appWidgetManager,
                          int[] appWidgetIds) {
 
-        Log.d(TAG, "onUpdate: ");
-
         // Get all ids
         ComponentName thisWidget = new ComponentName(context,
                 MyWidgetProvider.class);
         int[] allWidgetIds = appWidgetManager.getAppWidgetIds(thisWidget);
         for (int widgetId : allWidgetIds) {
 
-            final RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.widget_layout);
-            remoteViews.setInt(R.id.widget_container, "setBackgroundColor", Color.BLACK);
-            WallpaperManager wallpaperManager = WallpaperManager.getInstance(context);
-            Drawable drawable = wallpaperManager.getDrawable();
+            RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.widget_layout);
 
-            Bitmap bitmap = ((BitmapDrawable) drawable).getBitmap();
-            // Async couldn't change the bitmap, going with synchronous pallete check
-            Palette p = Palette.from(bitmap).generate();
-            int colorToShow = Color.BLACK;
-            int paletteColor = p.getDarkMutedColor(colorToShow);
-            if (paletteColor == colorToShow) {
-                paletteColor = p.getDarkVibrantColor(Color.BLACK);
-            }
-            Log.d("Widget", "Color is" + paletteColor);
-            remoteViews.setInt(R.id.widget_container, "setBackgroundColor", paletteColor);
-
-
-            remoteViews.setOnClickPendingIntent(R.id.widget_btn_shorten, getPendingSelfIntent(context, SHORTENCLICK));
-            remoteViews.setOnClickPendingIntent(R.id.widget_btn_paste, getPendingSelfIntent(context, PASTECLICK));
+            remoteViews.setOnClickPendingIntent(R.id.widget_btn_shorten, getPendingSelfIntent(context, ShortenClick));
+            remoteViews.setOnClickPendingIntent(R.id.widget_btn_paste, getPendingSelfIntent(context, PasteClick));
 
             appWidgetManager.updateAppWidget(widgetId, remoteViews);
 
@@ -92,18 +66,18 @@ public class MyWidgetProvider extends AppWidgetProvider {
         SharedPreferences sharedPreferences = context.getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
         String url = sharedPreferences.getString("url", "");
         setTextOnTv(context, url);
-        if (SHORTENCLICK.equals(intent.getAction())) {
+        if (ShortenClick.equals(intent.getAction())) {
             if (!Utils.isUrl(url)) {
                 Toast.makeText(context, "Not a url", Toast.LENGTH_SHORT).show();
             } else {
-                if (Utils.getHost(url).equals("cb.lk")) {
+                if (Utils.getHost(url).equals(context.getString(R.string.host))) {
                     Toast.makeText(context, "Already a short url", Toast.LENGTH_SHORT).show();
                 } else {
                     getShortenedUrl(url, context);
                 }
             }
 
-        } else if (PASTECLICK.equals(intent.getAction())) {
+        } else if (PasteClick.equals(intent.getAction())) {
 
             String text = Utils.getFromClip(context);
             setTextOnTv(context, text);
@@ -129,7 +103,7 @@ public class MyWidgetProvider extends AppWidgetProvider {
     public void getShortenedUrl(String url, final Context context) {
         PostBody postBody = new PostBody(url, "", "");
         final String[] shortURL = {""};
-        String urlToPost = "http://cb.lk/api/v1/";
+        String urlToPost = context.getString(R.string.api_endpoint);
         Retrofit retrofit = new Retrofit.Builder().addConverterFactory(GsonConverterFactory.create()).baseUrl(urlToPost).build();
         ShortenApi shortenApi = retrofit.create(ShortenApi.class);
 
@@ -137,17 +111,10 @@ public class MyWidgetProvider extends AppWidgetProvider {
 
             @Override
             public void onResponse(Call<Result> call, Response<Result> response) {
-
-                shortURL[0] = "cb.lk/" + response.body().getShortcode();
-
-                Log.d(TAG, "onResponse: " + response.body().getLongURL());
-                Log.d(TAG, "onResponse: " + shortURL[0]);
-
-
+                shortURL[0] = context.getString(R.string.short_code_prepend) + response.body().getShortcode();
                 saveToSharedPrefs(shortURL[0], context);
                 setTextOnTv(context, shortURL[0]);
                 Utils.saveToClipboard(shortURL[0], context);
-
             }
 
             @Override

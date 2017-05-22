@@ -22,7 +22,6 @@ import static android.content.Context.CLIPBOARD_SERVICE;
  */
 
 public class Utils {
-    public static final String TAG = "Utils";
 
     public static String getFromClip(Context context) {
         String retVal = null;
@@ -31,8 +30,7 @@ public class Utils {
         ClipData abc = myClipboard.getPrimaryClip();
         if (abc != null) {
             ClipData.Item item = abc.getItemAt(0);
-            String text = item.getText().toString();
-            retVal = text;
+            retVal = item.getText().toString();
         }
         return retVal;
     }
