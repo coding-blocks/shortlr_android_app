@@ -151,6 +151,7 @@ public class CBWatcherService extends Service {
                         Utils.saveToClipboard(shortUrl, CBWatcherService.this);
                         manager.removeView(view);
                         view=null;
+                        Log.d("Checking View",(view==null)?"View is null":"View is not null");
                     }
 
                     @Override
@@ -169,6 +170,7 @@ public class CBWatcherService extends Service {
 
                 manager.removeView(view);
                 view=null;
+                Log.d("Checking View",(view==null)?"View is null":"View is not null");
             }
         });
         manager.addView(view, layoutParams);
