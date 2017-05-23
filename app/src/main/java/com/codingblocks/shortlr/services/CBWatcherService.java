@@ -122,6 +122,7 @@ public class CBWatcherService extends Service {
             @Override
             public void onHomeButtonPressed() {
                 homePressWatcher.stopWatch();
+                if(view!=null)
                 manager.removeView(view);
             }
         });
@@ -149,6 +150,8 @@ public class CBWatcherService extends Service {
                         String shortUrl = "cb.lk/" + response.body().getShortcode();
                         Utils.saveToClipboard(shortUrl, CBWatcherService.this);
                         manager.removeView(view);
+                        view=null;
+                        Log.d("Checking View",(view==null)?"View is null":"View is not null");
                     }
 
                     @Override
@@ -164,7 +167,10 @@ public class CBWatcherService extends Service {
 
             @Override
             public void onClick(View v) {
+
                 manager.removeView(view);
+                view=null;
+                Log.d("Checking View",(view==null)?"View is null":"View is not null");
             }
         });
         manager.addView(view, layoutParams);
