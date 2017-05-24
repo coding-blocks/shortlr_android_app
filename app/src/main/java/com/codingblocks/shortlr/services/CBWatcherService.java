@@ -1,6 +1,10 @@
 package com.codingblocks.shortlr.services;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import android.app.Service;
+import android.content.BroadcastReceiver;
 import android.content.ClipData;
 import android.content.ClipDescription;
 import android.content.ClipboardManager;
@@ -11,22 +15,25 @@ import android.graphics.Color;
 import android.os.Build;
 import android.os.IBinder;
 import android.provider.Settings;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.AccelerateInterpolator;
+import android.view.animation.AnticipateInterpolator;
+import android.view.animation.OvershootInterpolator;
 import android.view.animation.ScaleAnimation;
+import android.widget.Button;
 import android.widget.ImageView;
 
-import com.codingblocks.shortlr.R;
-import com.codingblocks.shortlr.Utils;
 import com.codingblocks.shortlr.activities.GetPermissionActivity;
-import com.codingblocks.shortlr.api.ShortenApi;
 import com.codingblocks.shortlr.models.PostBody;
+import com.codingblocks.shortlr.R;
 import com.codingblocks.shortlr.models.Result;
-
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import com.codingblocks.shortlr.api.ShortenApi;
+import com.codingblocks.shortlr.Utils;
+import com.codingblocks.shortlr.watcher.HomePressWatcher;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -36,6 +43,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 
 public class CBWatcherService extends Service {
+    private final String TAG = "MyWatcherService";
     public static final String URL_REGEX = "^((https?|ftp)://|(www|ftp)\\.)?[a-z0-9-]+(\\.[a-z0-9-]+)+([/?].*)?$";
     private OnPrimaryClipChangedListener listener = new OnPrimaryClipChangedListener() {
         public void onPrimaryClipChanged() {
@@ -53,6 +61,8 @@ public class CBWatcherService extends Service {
             }
         }
     };
+    private WindowManager manager=null;
+    private View view=null;
 
     @Override
     public void onCreate() {
@@ -61,6 +71,7 @@ public class CBWatcherService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        Log.d(TAG, "onStartCommand: ");
         return START_STICKY;
     }
 
@@ -83,12 +94,13 @@ public class CBWatcherService extends Service {
                         showView(clipboardText);
                     }
                 }
+
             }
         }
     }
 
     public void showView(final String url) {
-        final WindowManager manager = (WindowManager) getApplicationContext().getSystemService(Context.WINDOW_SERVICE);
+        manager = (WindowManager) getApplicationContext().getSystemService(Context.WINDOW_SERVICE);
         WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams();
         layoutParams.gravity = Gravity.CENTER;
         layoutParams.type = WindowManager.LayoutParams.TYPE_SYSTEM_ALERT;
@@ -99,22 +111,35 @@ public class CBWatcherService extends Service {
         layoutParams.buttonBrightness = 1f;
         layoutParams.windowAnimations = android.R.style.Animation_Dialog;
 
-        final View view = View.inflate(getApplicationContext(), R.layout.window_layout, null);
+        view = View.inflate(getApplicationContext(), R.layout.window_layout, null);
         ScaleAnimation scale = new ScaleAnimation(0, 1, 0, 1, ScaleAnimation.RELATIVE_TO_SELF, .5f, ScaleAnimation.RELATIVE_TO_SELF, .5f);
         scale.setDuration(300);
-        scale.setInterpolator(new AccelerateInterpolator());
+        scale.setInterpolator(new AccelerateDecelerateInterpolator());
         view.startAnimation(scale);
         view.setBackgroundColor(Color.parseColor("#ffffff"));
+        final HomePressWatcher homePressWatcher=new HomePressWatcher(view.getContext());
+        homePressWatcher.setIntereceptor(new HomePressWatcher.onHomePressed() {
+            @Override
+            public void onHomeButtonPressed() {
+                homePressWatcher.stopWatch();
+                if(view!=null)
+                manager.removeView(view);
+            }
+        });
+        homePressWatcher.startWatch();
 
-        ImageView yesButton = (ImageView) view.findViewById(R.id.yesButton);
-        ImageView noButton = (ImageView) view.findViewById(R.id.noButton);
+/*        Button yesButton = (Button) view.findViewById(R.id.yesButton);
+        Button noButton = (Button) view.findViewById(R.id.noButton);*/
+        ImageView yesButton=(ImageView) view.findViewById(R.id.yesButton);
+        ImageView noButton=(ImageView) view.findViewById(R.id.noButton);
         yesButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
-                PostBody postBody = new PostBody(url, null, null);
+                String urlToShort = url;
+                PostBody postBody = new PostBody(urlToShort, null, null);
 
-                String urlToPost = getString(R.string.api_endpoint);
+                String urlToPost = "http://cb.lk/api/v1/";
                 Retrofit retrofit = new Retrofit.Builder().addConverterFactory(GsonConverterFactory.create()).baseUrl(urlToPost).build();
                 ShortenApi shortenApi = retrofit.create(ShortenApi.class);
 
@@ -122,9 +147,11 @@ public class CBWatcherService extends Service {
 
                     @Override
                     public void onResponse(Call<Result> call, Response<Result> response) {
-                        String shortUrl = getString(R.string.short_code_prepend) + response.body().getShortcode();
+                        String shortUrl = "cb.lk/" + response.body().getShortcode();
                         Utils.saveToClipboard(shortUrl, CBWatcherService.this);
                         manager.removeView(view);
+                        view=null;
+                        Log.d("Checking View",(view==null)?"View is null":"View is not null");
                     }
 
                     @Override
@@ -132,16 +159,23 @@ public class CBWatcherService extends Service {
                         t.printStackTrace();
                     }
                 });
+
+
             }
         });
         noButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
+
                 manager.removeView(view);
+                view=null;
+                Log.d("Checking View",(view==null)?"View is null":"View is not null");
             }
         });
         manager.addView(view, layoutParams);
     }
+
+
 }
 
