@@ -1,10 +1,6 @@
 package com.codingblocks.shortlr.services;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import android.app.Service;
-import android.content.BroadcastReceiver;
 import android.content.ClipData;
 import android.content.ClipDescription;
 import android.content.ClipboardManager;
@@ -15,25 +11,23 @@ import android.graphics.Color;
 import android.os.Build;
 import android.os.IBinder;
 import android.provider.Settings;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.AccelerateDecelerateInterpolator;
-import android.view.animation.AccelerateInterpolator;
-import android.view.animation.AnticipateInterpolator;
-import android.view.animation.OvershootInterpolator;
 import android.view.animation.ScaleAnimation;
-import android.widget.Button;
 import android.widget.ImageView;
 
-import com.codingblocks.shortlr.activities.GetPermissionActivity;
-import com.codingblocks.shortlr.models.PostBody;
 import com.codingblocks.shortlr.R;
-import com.codingblocks.shortlr.models.Result;
-import com.codingblocks.shortlr.api.ShortenApi;
 import com.codingblocks.shortlr.Utils;
+import com.codingblocks.shortlr.activities.GetPermissionActivity;
+import com.codingblocks.shortlr.api.ShortenApi;
+import com.codingblocks.shortlr.models.PostBody;
+import com.codingblocks.shortlr.models.Result;
 import com.codingblocks.shortlr.watcher.HomePressWatcher;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -43,7 +37,6 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 
 public class CBWatcherService extends Service {
-    private final String TAG = "MyWatcherService";
     public static final String URL_REGEX = "^((https?|ftp)://|(www|ftp)\\.)?[a-z0-9-]+(\\.[a-z0-9-]+)+([/?].*)?$";
     private OnPrimaryClipChangedListener listener = new OnPrimaryClipChangedListener() {
         public void onPrimaryClipChanged() {
@@ -61,8 +54,8 @@ public class CBWatcherService extends Service {
             }
         }
     };
-    private WindowManager manager=null;
-    private View view=null;
+    private WindowManager manager = null;
+    private View view = null;
 
     @Override
     public void onCreate() {
@@ -71,7 +64,6 @@ public class CBWatcherService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Log.d(TAG, "onStartCommand: ");
         return START_STICKY;
     }
 
@@ -90,7 +82,7 @@ public class CBWatcherService extends Service {
                 Pattern p = Pattern.compile(URL_REGEX);
                 Matcher m = p.matcher(clipboardText);
                 if (m.find()) {
-                    if (!Utils.getHost(clipboardText).equals("cb.lk")) {
+                    if (!Utils.getHost(clipboardText).equals(getString(R.string.host))) {
                         showView(clipboardText);
                     }
                 }
@@ -117,29 +109,26 @@ public class CBWatcherService extends Service {
         scale.setInterpolator(new AccelerateDecelerateInterpolator());
         view.startAnimation(scale);
         view.setBackgroundColor(Color.parseColor("#ffffff"));
-        final HomePressWatcher homePressWatcher=new HomePressWatcher(view.getContext());
-        homePressWatcher.setIntereceptor(new HomePressWatcher.onHomePressed() {
+        final HomePressWatcher homePressWatcher = new HomePressWatcher(view.getContext());
+        homePressWatcher.setInterceptor(new HomePressWatcher.onHomePressed() {
             @Override
             public void onHomeButtonPressed() {
                 homePressWatcher.stopWatch();
-                if(view!=null)
-                manager.removeView(view);
+                if (view != null)
+                    manager.removeView(view);
             }
         });
         homePressWatcher.startWatch();
 
-/*        Button yesButton = (Button) view.findViewById(R.id.yesButton);
-        Button noButton = (Button) view.findViewById(R.id.noButton);*/
-        ImageView yesButton=(ImageView) view.findViewById(R.id.yesButton);
-        ImageView noButton=(ImageView) view.findViewById(R.id.noButton);
+        ImageView yesButton = (ImageView) view.findViewById(R.id.yesButton);
+        ImageView noButton = (ImageView) view.findViewById(R.id.noButton);
         yesButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
-                String urlToShort = url;
-                PostBody postBody = new PostBody(urlToShort, null, null);
+                PostBody postBody = new PostBody(url, null, null);
 
-                String urlToPost = "http://cb.lk/api/v1/";
+                String urlToPost = getString(R.string.api_endpoint);
                 Retrofit retrofit = new Retrofit.Builder().addConverterFactory(GsonConverterFactory.create()).baseUrl(urlToPost).build();
                 ShortenApi shortenApi = retrofit.create(ShortenApi.class);
 
@@ -147,11 +136,10 @@ public class CBWatcherService extends Service {
 
                     @Override
                     public void onResponse(Call<Result> call, Response<Result> response) {
-                        String shortUrl = "cb.lk/" + response.body().getShortcode();
+                        String shortUrl = getString(R.string.short_code_prepend) + response.body().getShortcode();
                         Utils.saveToClipboard(shortUrl, CBWatcherService.this);
                         manager.removeView(view);
-                        view=null;
-                        Log.d("Checking View",(view==null)?"View is null":"View is not null");
+                        view = null;
                     }
 
                     @Override
@@ -167,10 +155,8 @@ public class CBWatcherService extends Service {
 
             @Override
             public void onClick(View v) {
-
                 manager.removeView(view);
-                view=null;
-                Log.d("Checking View",(view==null)?"View is null":"View is not null");
+                view = null;
             }
         });
         manager.addView(view, layoutParams);
