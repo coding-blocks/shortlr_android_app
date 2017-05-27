@@ -17,6 +17,7 @@ import android.os.IBinder;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.AccelerateDecelerateInterpolator;
@@ -43,8 +44,10 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 
 public class CBWatcherService extends Service {
-    private final String TAG = "MyWatcherService";
     public static final String URL_REGEX = "^((https?|ftp)://|(www|ftp)\\.)?[a-z0-9-]+(\\.[a-z0-9-]+)+([/?].*)?$";
+    private final String TAG = "MyWatcherService";
+    private WindowManager manager = null;
+    private View view = null;
     private OnPrimaryClipChangedListener listener = new OnPrimaryClipChangedListener() {
         public void onPrimaryClipChanged() {
 
@@ -61,8 +64,6 @@ public class CBWatcherService extends Service {
             }
         }
     };
-    private WindowManager manager=null;
-    private View view=null;
 
     @Override
     public void onCreate() {
@@ -104,6 +105,7 @@ public class CBWatcherService extends Service {
         WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams();
         layoutParams.gravity = Gravity.CENTER;
         layoutParams.type = WindowManager.LayoutParams.TYPE_SYSTEM_ALERT;
+        layoutParams.flags=WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN;
         layoutParams.width = WindowManager.LayoutParams.WRAP_CONTENT;
         layoutParams.height = WindowManager.LayoutParams.WRAP_CONTENT;
         layoutParams.alpha = 1.0f;
@@ -117,21 +119,35 @@ public class CBWatcherService extends Service {
         scale.setInterpolator(new AccelerateDecelerateInterpolator());
         view.startAnimation(scale);
         view.setBackgroundColor(Color.parseColor("#ffffff"));
-        final HomePressWatcher homePressWatcher=new HomePressWatcher(view.getContext());
+        final HomePressWatcher homePressWatcher = new HomePressWatcher(view.getContext());
+        // solution for home button press and recentapps press
         homePressWatcher.setIntereceptor(new HomePressWatcher.onHomePressed() {
             @Override
             public void onHomeButtonPressed() {
                 homePressWatcher.stopWatch();
-                if(view!=null)
-                manager.removeView(view);
+           removeView();
             }
         });
         homePressWatcher.startWatch();
 
+        // This was a bit tricky. Tested and done. Button behavior:- to close this view only.
+        view.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                removeView();
+                return false;
+            }
+        });
+        view.requestFocus();
+        view.setFocusable(true);
+        view.setFocusableInTouchMode(true);
+
+
+
 /*        Button yesButton = (Button) view.findViewById(R.id.yesButton);
         Button noButton = (Button) view.findViewById(R.id.noButton);*/
-        ImageView yesButton=(ImageView) view.findViewById(R.id.yesButton);
-        ImageView noButton=(ImageView) view.findViewById(R.id.noButton);
+        ImageView yesButton = (ImageView) view.findViewById(R.id.yesButton);
+        ImageView noButton = (ImageView) view.findViewById(R.id.noButton);
         yesButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -149,9 +165,8 @@ public class CBWatcherService extends Service {
                     public void onResponse(Call<Result> call, Response<Result> response) {
                         String shortUrl = "cb.lk/" + response.body().getShortcode();
                         Utils.saveToClipboard(shortUrl, CBWatcherService.this);
-                        manager.removeView(view);
-                        view=null;
-                        Log.d("Checking View",(view==null)?"View is null":"View is not null");
+                        removeView();
+
                     }
 
                     @Override
@@ -167,13 +182,17 @@ public class CBWatcherService extends Service {
 
             @Override
             public void onClick(View v) {
-
-                manager.removeView(view);
-                view=null;
-                Log.d("Checking View",(view==null)?"View is null":"View is not null");
-            }
+         removeView();
+             }
         });
         manager.addView(view, layoutParams);
+    }
+
+    private void removeView() {
+        if (view != null) {
+            manager.removeView(view);
+            view = null;
+        }
     }
 
 

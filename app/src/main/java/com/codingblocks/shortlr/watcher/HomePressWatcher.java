@@ -53,11 +53,9 @@ public class HomePressWatcher {
             String action=intent.getAction();
             if(action.equals(Intent.ACTION_CLOSE_SYSTEM_DIALOGS))
             {
-
                 String reason=intent.getStringExtra("reason");
-                if(reason.equals("homekey"))
+                if(reason.equals("homekey") || reason.equals("recentapps"))
                 {
-                    Log.d("Check Home","Home Button Pressed");
                     interceptor.onHomeButtonPressed();
                 }
             }
