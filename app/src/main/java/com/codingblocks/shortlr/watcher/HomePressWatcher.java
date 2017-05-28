@@ -15,30 +15,34 @@ import android.view.WindowManager;
 
 public class HomePressWatcher {
 
-    public interface onHomePressed {
+    public interface onHomePressed{
         void onHomeButtonPressed();
     }
 
 
-    private Context context;
-    private onHomePressed interceptor;
-    private InterceptReceiver receiver;
+    Context context;
+    onHomePressed interceptor;
+    InterceptReceiver receiver;
 
-    public HomePressWatcher(Context context) {
-        this.context = context;
+    public HomePressWatcher(Context context)
+    {
+        this.context=context;
     }
 
-    public void setInterceptor(onHomePressed interceptor) {
-        this.interceptor = interceptor;
-        receiver = new InterceptReceiver();
+    public void setIntereceptor(onHomePressed intereceptor)
+    {
+    this.interceptor=intereceptor;
+    receiver=new InterceptReceiver();
     }
 
-    public void startWatch() {
+    public void startWatch()
+    {
         context.registerReceiver(receiver, new IntentFilter(Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
     }
 
 
-    public void stopWatch() {
+    public void stopWatch()
+    {
         context.unregisterReceiver(receiver);
     }
 
@@ -46,16 +50,18 @@ public class HomePressWatcher {
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            String action = intent.getAction();
-            if (action.equals(Intent.ACTION_CLOSE_SYSTEM_DIALOGS)) {
-
-                String reason = intent.getStringExtra("reason");
-                if (reason.equals("homekey")) {
+            String action=intent.getAction();
+            if(action.equals(Intent.ACTION_CLOSE_SYSTEM_DIALOGS))
+            {
+                String reason=intent.getStringExtra("reason");
+                if(reason.equals("homekey") || reason.equals("recentapps"))
+                {
                     interceptor.onHomeButtonPressed();
                 }
             }
         }
     }
+
 
 
 }
