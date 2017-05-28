@@ -1,10 +1,6 @@
 package com.codingblocks.shortlr.services;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import android.app.Service;
-import android.content.BroadcastReceiver;
 import android.content.ClipData;
 import android.content.ClipDescription;
 import android.content.ClipboardManager;
@@ -15,26 +11,24 @@ import android.graphics.Color;
 import android.os.Build;
 import android.os.IBinder;
 import android.provider.Settings;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.AccelerateDecelerateInterpolator;
-import android.view.animation.AccelerateInterpolator;
-import android.view.animation.AnticipateInterpolator;
-import android.view.animation.OvershootInterpolator;
 import android.view.animation.ScaleAnimation;
-import android.widget.Button;
 import android.widget.ImageView;
 
-import com.codingblocks.shortlr.activities.GetPermissionActivity;
-import com.codingblocks.shortlr.models.PostBody;
 import com.codingblocks.shortlr.R;
-import com.codingblocks.shortlr.models.Result;
-import com.codingblocks.shortlr.api.ShortenApi;
 import com.codingblocks.shortlr.Utils;
+import com.codingblocks.shortlr.activities.GetPermissionActivity;
+import com.codingblocks.shortlr.api.ShortenApi;
+import com.codingblocks.shortlr.models.PostBody;
+import com.codingblocks.shortlr.models.Result;
 import com.codingblocks.shortlr.watcher.HomePressWatcher;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -45,7 +39,6 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class CBWatcherService extends Service {
     public static final String URL_REGEX = "^((https?|ftp)://|(www|ftp)\\.)?[a-z0-9-]+(\\.[a-z0-9-]+)+([/?].*)?$";
-    private final String TAG = "MyWatcherService";
     private WindowManager manager = null;
     private View view = null;
     private OnPrimaryClipChangedListener listener = new OnPrimaryClipChangedListener() {
@@ -72,7 +65,6 @@ public class CBWatcherService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Log.d(TAG, "onStartCommand: ");
         return START_STICKY;
     }
 
@@ -91,7 +83,7 @@ public class CBWatcherService extends Service {
                 Pattern p = Pattern.compile(URL_REGEX);
                 Matcher m = p.matcher(clipboardText);
                 if (m.find()) {
-                    if (!Utils.getHost(clipboardText).equals("cb.lk")) {
+                    if (!Utils.getHost(clipboardText).equals(getString(R.string.host))) {
                         showView(clipboardText);
                     }
                 }
@@ -105,7 +97,7 @@ public class CBWatcherService extends Service {
         WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams();
         layoutParams.gravity = Gravity.CENTER;
         layoutParams.type = WindowManager.LayoutParams.TYPE_SYSTEM_ALERT;
-        layoutParams.flags=WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN;
+        layoutParams.flags = WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN;
         layoutParams.width = WindowManager.LayoutParams.WRAP_CONTENT;
         layoutParams.height = WindowManager.LayoutParams.WRAP_CONTENT;
         layoutParams.alpha = 1.0f;
@@ -125,12 +117,11 @@ public class CBWatcherService extends Service {
             @Override
             public void onHomeButtonPressed() {
                 homePressWatcher.stopWatch();
-           removeView();
+                removeView();
             }
         });
         homePressWatcher.startWatch();
-
-        // This was a bit tricky. Tested and done. Button behavior:- to close this view only.
+        // solution for back key press
         view.setOnKeyListener(new View.OnKeyListener() {
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
@@ -143,19 +134,15 @@ public class CBWatcherService extends Service {
         view.setFocusableInTouchMode(true);
 
 
-
-/*        Button yesButton = (Button) view.findViewById(R.id.yesButton);
-        Button noButton = (Button) view.findViewById(R.id.noButton);*/
         ImageView yesButton = (ImageView) view.findViewById(R.id.yesButton);
         ImageView noButton = (ImageView) view.findViewById(R.id.noButton);
         yesButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
-                String urlToShort = url;
-                PostBody postBody = new PostBody(urlToShort, null, null);
+                PostBody postBody = new PostBody(url, null, null);
 
-                String urlToPost = "http://cb.lk/api/v1/";
+                String urlToPost = getString(R.string.api_endpoint);
                 Retrofit retrofit = new Retrofit.Builder().addConverterFactory(GsonConverterFactory.create()).baseUrl(urlToPost).build();
                 ShortenApi shortenApi = retrofit.create(ShortenApi.class);
 
@@ -163,7 +150,7 @@ public class CBWatcherService extends Service {
 
                     @Override
                     public void onResponse(Call<Result> call, Response<Result> response) {
-                        String shortUrl = "cb.lk/" + response.body().getShortcode();
+                        String shortUrl = getString(R.string.short_code_prepend) + response.body().getShortcode();
                         Utils.saveToClipboard(shortUrl, CBWatcherService.this);
                         removeView();
 
@@ -182,8 +169,8 @@ public class CBWatcherService extends Service {
 
             @Override
             public void onClick(View v) {
-         removeView();
-             }
+                removeView();
+            }
         });
         manager.addView(view, layoutParams);
     }
