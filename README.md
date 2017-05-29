@@ -6,15 +6,15 @@ This is the android client for Coding Blocks Shortlr ([Github](https://github.co
 
 #### 1. Home screen widget.
 
-![](https://github.com/coding-blocks/shortlr_android_app/blob/master/Demo/widget.gif)
+![](https://github.com/anu0012/shortlr_android_app/blob/master/Demo/context.gif)
 
 #### 2. Short and share.
 
-![](https://github.com/coding-blocks/shortlr_android_app/blob/master/Demo/shortNshare.gif)
+![](https://github.com/anu0012/shortlr_android_app/blob/master/Demo/shortNshare.gif)
 
 #### 3. Clipboard listener.
 
-![](https://github.com/coding-blocks/shortlr_android_app/blob/master/Demo/context.gif)
+![](https://github.com/anu0012/shortlr_android_app/blob/master/Demo/context.gif)
 
 ## For Contributors
 
