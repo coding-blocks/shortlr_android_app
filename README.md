@@ -6,7 +6,7 @@ This is the android client for Coding Blocks Shortlr ([Github](https://github.co
 
 #### 1. Home screen widget.
 
-![](https://github.com/anu0012/shortlr_android_app/blob/master/Demo/context.gif)
+![](https://github.com/anu0012/shortlr_android_app/blob/master/Demo/widget.gif)
 
 #### 2. Short and share.
 
