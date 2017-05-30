@@ -25,7 +25,7 @@ public class ShortenActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_shorten);
-        startWatcherService();
+
 
         if (getIntent().getAction().equals(ACTION_MAIN)) {
             // This is the for the first time app is launched.
@@ -76,8 +76,5 @@ public class ShortenActivity extends Activity {
         });
     }
 
-    private void startWatcherService() {
-        Intent i = new Intent(this, CBWatcherService.class);
-        startService(i);
-    }
+
 }
